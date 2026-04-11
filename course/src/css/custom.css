@@ -1,0 +1,62 @@
+:root {
+  --ifm-color-primary: #4a6cf7;
+  --ifm-color-primary-dark: #3358f5;
+  --ifm-color-primary-darker: #284ef5;
+  --ifm-color-primary-darkest: #0c33e3;
+  --ifm-color-primary-light: #6180f9;
+  --ifm-color-primary-lighter: #6c8af9;
+  --ifm-color-primary-lightest: #93a9fb;
+  --ifm-code-font-size: 90%;
+  --ifm-font-size-base: 17px;
+  --ifm-line-height-base: 1.75;
+  --ifm-heading-font-weight: 600;
+  --docusaurus-highlighted-code-line-bg: rgba(74, 108, 247, 0.1);
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #7b9cff;
+  --ifm-color-primary-dark: #5a82ff;
+  --ifm-color-primary-darker: #4a76ff;
+  --ifm-color-primary-darkest: #1950ff;
+  --ifm-color-primary-light: #9cb6ff;
+  --ifm-color-primary-lighter: #acc2ff;
+  --ifm-color-primary-lightest: #dee8ff;
+  --docusaurus-highlighted-code-line-bg: rgba(123, 156, 255, 0.15);
+}
+
+/* Readable prose width */
+.markdown {
+  max-width: 780px;
+}
+
+/* Better code block styling */
+.prism-code {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Admonition styling refinements */
+.admonition {
+  margin-bottom: 1.5em;
+}
+
+/* Mermaid diagram sizing */
+.docusaurus-mermaid-container {
+  margin: 2em 0;
+}
+
+/* Slightly larger headings for course feel */
+.markdown h2 {
+  margin-top: 2.5em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.markdown h3 {
+  margin-top: 2em;
+}
+
+/* Key Takeaways section styling */
+.markdown h2:last-of-type {
+  border-bottom-color: var(--ifm-color-primary);
+}
