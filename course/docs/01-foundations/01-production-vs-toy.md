@@ -49,9 +49,9 @@ Let's make this tangible. Suppose the model asks the harness to run two Bash com
 
 **In Claude Code**, the `StreamingToolExecutor` (in `src/services/tools/StreamingToolExecutor.ts`) handles this with a pattern called *sibling abort*:
 
-1. Both tools start executing in parallel because the executor determined they are concurrency-safe.
-2. The `rm -rf /tmp/build && make` command fails. The executor sets `hasErrored = true` and fires the `siblingAbortController`.
-3. The still-running `git status` command receives the abort signal. Instead of crashing, it gets a **synthetic error message** — a fabricated `tool_result` block that says `"Cancelled: parallel tool call rm -rf /tmp/build && make errored"`.
+1. Before executing, the executor calls each tool's `isConcurrencySafe(input)` method. Every tool defaults to `false` (fail-closed), but can override this. For Bash, concurrency safety delegates to `isReadOnly(input)` — which parses the shell command, splits compound statements, and checks each subcommand against allowlists of known read-only commands (`git status`, `ls`, `cat`, etc.) and safe flag combinations. If the command can't be parsed or contains anything not on the allowlist, `isReadOnly` returns `false` and the tool runs exclusively. In this case, both `git status` and `rm -rf /tmp/build && make` are Bash calls, but only `git status` passes the read-only check — so they would actually run *sequentially*, not in parallel. (For a true parallel scenario, imagine two concurrent file reads, where `FileReadTool` always returns `isConcurrencySafe: true`.)
+2. When a tool fails, the executor sets `hasErrored = true` and fires the `siblingAbortController` — a child of the query's abort controller that is shared across sibling tools.
+3. Any still-running sibling tool receives the abort signal. Instead of crashing, it gets a **synthetic error message** — a fabricated `tool_result` block that says `"Cancelled: parallel tool call errored"`.
 4. Both tool results (the real error and the synthetic cancellation) are yielded back to the query loop as normal `UserMessage` objects.
 5. The model sees both results in its next turn and can reason about what happened.
 
